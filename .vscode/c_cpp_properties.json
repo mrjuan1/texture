@@ -1,0 +1,20 @@
+{
+	"configurations": [
+		{
+			"name": "Linux",
+			"compilerPath": "/usr/bin/gcc",
+			"compilerArgs": [
+				"-std=c2x",
+				"-pedantic",
+				"-Wall",
+				"-Wextra",
+				"-g3",
+				"-O0",
+				"-m64"
+			],
+			"intelliSenseMode": "linux-gcc-x64",
+			"cStandard": "c17"
+		}
+	],
+	"version": 4
+}

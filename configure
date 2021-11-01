@@ -1,0 +1,62 @@
+#!/bin/sh -e
+
+defaultPlatform="linux"
+
+function showUsage() {
+	msg="$1"
+
+	if [ ! -z "$msg" ]; then
+		echo -e "$msg\n"
+	fi
+
+	echo "Usage: $0 [<option(s)...>]"
+	echo "Options:"
+	echo "  -p --platform <platform> Configure for <platform> (default: $defaultPlatform)"
+	echo "  -h --help                Show this message"
+	echo -e "Supported platforms: \"linux\"\n"
+
+	if [ -z "$msg" ]; then
+		exit 0
+	else
+		exit 1
+	fi
+}
+
+selectPlatform=0
+
+for arg in $@; do
+	if [ $selectPlatform -eq 1 ]; then
+		platform="$arg"
+		selectPlatform=0
+
+		continue
+	fi
+
+	case "$arg" in
+	"-p" | "--platform")
+		selectPlatform=1
+		;;
+	"-h" | "--help")
+		showUsage
+		;;
+	*)
+		showUsage "Unknown option \"$arg\"."
+		;;
+	esac
+done
+
+if [ -z "$platform" ]; then
+	platform="$defaultPlatform"
+fi
+
+case "$platform" in
+"linux")
+	echo "Configuring for platform \"$platform\"..."
+	echo "include $platform.mk" >>Makefile
+	;;
+*)
+	showUsage "Unknown platform \"$platform\"."
+	;;
+esac
+
+echo "Done, you can run \"make\" now."

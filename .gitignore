@@ -1,0 +1,9 @@
+Makefile
+*.o
+texture
+
+*.png
+*.pvr
+*.bin
+
+dist/
