@@ -52,6 +52,24 @@ fi
 case "$platform" in
 "linux")
 	echo "Configuring for platform \"$platform\"..."
+	git submodule init
+	git submodule update
+	cd etcpak
+	git submodule init
+	git submodule update
+	git checkout master
+	git branch -D library 2>/dev/null || true
+	git checkout -b library
+	cp -v ../etcpak.h .
+	git add etcpak.h
+	sed -i 's|^#include <future>$|#include "etcpak.h"\n\n#include <future>|;s|^int main( int argc, char\*\* argv )$|extern "C" int etcpak(int argc, char*argv[])|' Application.cpp
+	cd unix
+	sed -i 's|+=$|+= -fPIC|;s|\-lpthread$|-lpthread -shared|;s|etcpak$|libetcpak.so|' build.mk
+	sed -i 's|^all: debug$|all: release\n\tstrip -s libetcpak.so|' Makefile
+	cd ..
+	sed -i 's|etcpak$|libetcpak.so|' .gitignore
+	git commit -am "Update to build as library"
+	cd ..
 	echo "include $platform.mk" >>Makefile
 	;;
 *)

@@ -27,13 +27,18 @@ clean:
 	@rm -Rfv $(O) *.o *.bin *.pvr
 
 distclean: clean
+	@cd etcpak/unix && make clean && cd .. && git checkout master
 	@rm -Rfv $(shell cat .gitignore)
 
-$(O): $(OBJS)
-	$(CC) $^ -o $@ $(LDFLAGS)
+$(O): $(OBJS) libetcpak.so
+	$(CC) $(OBJS) -o $@ $(LDFLAGS_COMMON) $(LDFLAGS)
 
 %.o: %.c
 	$(CC) -c $< -o $@ $(CFLAGS_DEBUG) $(CFLAGS)
+
+libetcpak.so:
+	@cd etcpak/unix && make -j$(nproc)
+	@cp -v etcpak/unix/libetcpak.so .
 
 run: $(O) $(TEXTURE).png
 	./$^
@@ -41,13 +46,13 @@ run: $(O) $(TEXTURE).png
 debug: $(O) $(TEXTURE).png
 	$(GDB) -ex run --batch --args ./$^
 
-release: $(SRCS)
-	$(CC) $^ -o $(O) $(CFLAGS_RELEASE) $(CFLAGS) $(LDFLAGS)
+release: $(SRCS) libetcpak.so
+	$(CC) $(SRCS) -o $(O) $(CFLAGS_RELEASE) $(CFLAGS) $(LDFLAGS_COMMON) $(LDFLAGS)
 	$(STRIP) -s $(O)
 
 dist: release
 	@mkdir -pv dist
-	@cp -v $(O) dist
+	@cp -v $(O) libetcpak.so dist
 
 $(TEXTURE).png:
 	@if [ ! -e $@ ]; then cp -v ../$@ .; fi
@@ -61,6 +66,7 @@ help:
 	@echo "distclean - Remove everything in .gitignore"
 	@echo "$(O) - Build $(O)"
 	@echo "<object>.o - Build <object>.o"
+	@echo "libetcpak.so - Build libetcpak.so"
 	@echo "run - Run executable"
 	@echo "debug - Run executable with gdb"
 	@echo "release - Build optimised executable"

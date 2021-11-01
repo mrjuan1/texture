@@ -1,4 +1,12 @@
 {
-	"cSpell.words": ["etcpak", "mipmaps", "Parens", "Wolfaardt"],
+	"cSpell.words": [
+		"etcpak",
+		"Integerv",
+		"mipmaps",
+		"OPENGL",
+		"Parameteriv",
+		"Parens",
+		"Wolfaardt"
+	],
 	"files.associations": { "*.h": "c" }
 }
