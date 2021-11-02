@@ -1,7 +1,7 @@
 # TODO
 
-- [ ] Add etcpak submodule
-- [ ] Add system to build etcpak as a library
-- [ ] Add proper error-checking
-- [ ] Add conversion messages
+- [x] Add etcpak submodule
+- [x] Add system to build etcpak as a library
+- [x] Add proper error-checking
+- [x] Add conversion messages
 - [x] Write README
